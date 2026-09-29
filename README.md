@@ -55,7 +55,7 @@ No priority to set; the strongest item wins. Healthstones are left alone because
 
 `/rum` opens the Rummage window. Each row is one category:
 
-- the icon of the item it currently uses (question mark if none). Drag it, or click it, and drop on any action slot, including PaddleSlots paddles. Hover it to see every candidate in ranked order.
+- the icon of the item it currently uses (question mark if none). Drag it, or click it, and drop on any action slot, including Backhand paddles. Hover it to see every candidate in ranked order.
 - a checkbox to stop or resume updating that macro.
 - for food and flasks, two dropdowns: **Preferred buff** (the stat you want, for example Haste) and **If none, then** (the fallback when you carry no food with it). "Any (strongest)" ranks purely by amount. The full order is shown next to them; **Default** restores the built-in list.
 

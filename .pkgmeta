@@ -1,6 +1,7 @@
 package-as: Rummage
 
 ignore:
+  - assets
   - CHANGELOG.md
 
 manual-changelog: CHANGELOG.md
