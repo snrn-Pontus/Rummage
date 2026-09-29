@@ -2,7 +2,7 @@
 
 ## 0.1.0 — First release
 
-Rummage is part of the SNRN addon family (formerly developed as SmartSlots).
+Rummage is part of the SNRN addon family.
 
 - **One macro per item type** that always uses the best item in your bags:
   - `SmartFood` and `SmartFlask`: food and flasks/elixirs by a per-character stat priority read from tooltip text. Food above your level is skipped.
