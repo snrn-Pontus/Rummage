@@ -1,0 +1,34 @@
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS (in case the repo is cloned there)
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# WoW client artefacts that can end up in an addon folder
+*.zip
+*.rar
+*.7z
+Errors/
+WTF/
+Interface/
+*.bak
+*.orig
+
+# Packager output
+.release/
+release/
+dist/
+
+# Python scratch (Pillow scripts used to build the logo)
+__pycache__/
+*.pyc

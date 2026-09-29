@@ -1,0 +1,24 @@
+## Interface: 16001
+## Title: |cff33ccffSNRN|r Rummage
+## Notes: One macro per item type that always uses the best item in your bags: food and flasks by stat priority, drinks, potions and bandages by amount, and the quest item you need right now.
+## Author: SillyNameRandomNumber
+## Version: 0.1.0
+## X-License: MIT
+## X-Website: https://github.com/snrn-Pontus/Rummage
+## X-Category: Bags & Inventory
+## Category: Bags & Inventory
+## Group: SNRN
+## SavedVariables: RummageDB
+## SavedVariablesPerCharacter: RummageCharDB
+
+Core.lua
+Tooltip.lua
+Categories/Stats.lua
+Categories/Food.lua
+Categories/Drink.lua
+Categories/Potions.lua
+Categories/Flask.lua
+Categories/Bandage.lua
+Categories/Quest.lua
+Window.lua
+Settings.lua
