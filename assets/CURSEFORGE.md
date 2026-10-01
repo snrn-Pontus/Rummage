@@ -10,7 +10,7 @@ Stop dragging a new potion or a new stack of food onto your bars every time you 
 
 Full history on the Changelog tab of each file.
 
-<!-- Screenshot: the /rum window. Replace with the media.forgecdn.net URL after uploading. -->
+![The /rum window, hovering the SmartFood icon](https://media.forgecdn.net/attachments/1997/380/window-png.png)
 
 ## What you get
 
@@ -34,8 +34,6 @@ Type `/rum`, then drag an icon from the window onto any action slot. That's it.
 
 Hover an icon to see every candidate in your bags in ranked order. For food and flasks, pick a **Preferred buff** (Haste, Stamina, Strength and so on) and an **If none, then** fallback, per character.
 
-<!-- Screenshot: the ranked tooltip from hovering the SmartFood icon. -->
-
 ## Quest items
 
 SmartQuestItem follows the item button the objective tracker shows for a quest. It picks, in order: the super-tracked quest, quests on the current map, tracked quests, the rest of your log, then bag items that start a quest. It follows quest log, tracking and zone changes.
@@ -43,6 +41,8 @@ SmartQuestItem follows the item button the objective tracker shows for a quest. 
 ## Works with a controller
 
 The Settings page (**Settings > AddOns > Rummage**) is built so WoW: Forever's gamepad cursor never touches it, which avoids the client freezing when Settings is closed with the controller. Rummage macros also work on **SNRN Backhand** paddle slots.
+
+![The Rummage settings page](https://media.forgecdn.net/attachments/1997/379/settings-png.png)
 
 ## Slash commands
 
