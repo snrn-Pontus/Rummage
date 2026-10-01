@@ -47,7 +47,7 @@ local function ShowCandidateTooltip(button, key)
                 r, g, b = 0.5, 1, 0.5
             elseif not candidate.usable then
                 r, g, b = 1, 0.5, 0.5
-                text = text .. string.format(" (level %d)", candidate.minLevel)
+                text = text .. string.format(" (%s)", candidate.unusableReason or ("level " .. candidate.minLevel))
             end
             GameTooltip:AddLine(string.format("%d. %s x%d", index, text, candidate.count), r, g, b, true)
         end

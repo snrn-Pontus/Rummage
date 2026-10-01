@@ -2,7 +2,7 @@
 ## Title: |cff33ccffSNRN|r Rummage
 ## Notes: One macro per item type that always uses the best item in your bags: food and flasks by stat priority, drinks, potions and bandages by amount, and the quest item you need right now.
 ## Author: SillyNameRandomNumber
-## Version: 0.1.0
+## Version: 0.2.0
 ## IconTexture: Interface\AddOns\Rummage\Media\Icon.tga
 ## X-Curse-Project-ID: 1718516
 ## X-License: MIT

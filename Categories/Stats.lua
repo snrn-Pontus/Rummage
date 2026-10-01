@@ -105,9 +105,16 @@ end
 -- 15" and "8 of all stats" out of a normalised tooltip line into result.
 -- MatchStat only checks the start of a phrase, so trailing words
 -- ("haste for 1 hour") are harmless. Amounts restored by "restores N health"
--- are skipped so a potion's heal is not read as a Health stat.
+-- are skipped so a potion's heal is not read as a Health stat. Mana over
+-- time ("regenerate 3 mana every 5 seconds", "3 mana per 5 sec") is Mana/5,
+-- not maximum Mana.
 function stats.ParseStats(line, result)
     result = result or {}
+    local function AddMP5(amount)
+        AddStat(result, "MP5", tonumber(amount))
+        return " "
+    end
+    line = line:gsub("(%d+)%s+mana%s+every%s+5%s+sec%a*", AddMP5):gsub("(%d+)%s+mana%s+per%s+5%s+sec%a*", AddMP5)
     line = line:gsub("restores?%s+%d+%s+to%s+%d+", " "):gsub("restores?%s+%d+", " "):gsub("heals?%s+%d+", " ")
     for amount, phrase in line:gmatch("(%d+)%s+([%a%s]+)") do
         amount = tonumber(amount)

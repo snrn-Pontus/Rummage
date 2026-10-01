@@ -41,7 +41,17 @@ Words accepted: `stamina sta stam spirit spi strength str agility agi intellect 
 
 ### Flasks and elixirs
 
-Same priority mechanism as food, with its own list (`/rummage flask str agi int`). Battle and guardian elixirs are not told apart yet: the macro uses the single best match, so keep the other elixir type on a separate slot if you use both.
+Same priority mechanism as food, with its own list (`/rummage flask str agi int`). Until you set one, the default follows your class and talents (based on the Icy Veins WoW Forever guides):
+
+| Class / role | Default order starts with |
+| --- | --- |
+| Warrior, Retribution/Protection Paladin, Enhancement Shaman, Feral Druid | Strength, Attack Power, Agility |
+| Rogue, Hunter | Agility, Attack Power |
+| Mage | Spell Power, Spirit, Intellect |
+| Warlock | Spell Power, Stamina, Intellect |
+| Priest, and Holy/Restoration/Balance/Elemental hybrids | Spell Power, Intellect/MP5, Spirit |
+
+Hybrids without a talent tree yet get a mixed list (druids lead with casting). Stamina, Health and Armor are always on the list as a last resort. Elixirs that only give stats your class gets nothing from (Strength or Agility on a mage, Intellect or Spirit on a rogue) are skipped instead of wasted, and show as "no use to your class". Add the stat to your priority if you want them used anyway. Battle and guardian elixirs are not told apart yet: the macro uses the single best match, so keep the other elixir type on a separate slot if you use both.
 
 ### Drinks
 
@@ -49,7 +59,7 @@ SmartDrink uses whatever you sit down and drink that restores the most mana: wat
 
 ### Potions and bandages
 
-No priority to set; the strongest item wins. Healthstones are left alone because they do not share the potion cooldown. The bandage macro targets you (`/use [@player]`).
+No priority to set; the strongest item wins. Potions that restore both health and mana (Rejuvenation) come after every pure health or mana potion, so one button does not spend the other half; they are used once the pure potions run out. Healthstones are left alone because they do not share the potion cooldown. The bandage macro targets you (`/use [@player]`).
 
 ## The window
 

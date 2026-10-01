@@ -60,6 +60,9 @@ function Rummage.GetPriority(key)
     if type(saved) == "table" then
         return saved
     end
+    if type(category.defaultPriority) == "function" then
+        return category.defaultPriority()
+    end
     return category.defaultPriority or {}
 end
 
@@ -121,11 +124,13 @@ end
 --   key              "food"
 --   label            "Food"
 --   macroName        "SmartFood"
---   defaultPriority  { "HASTE", "CRIT", ... } (stat keys, see ParsePriority)
+--   defaultPriority  { "HASTE", "CRIT", ... } (stat keys, see ParsePriority),
+--                    or a function returning one (e.g. per class)
 --   statAliases      { haste = "HASTE", crit = "CRIT", ... } (optional)
 --   Prefilter(itemID, classID, subclassID) -> bool, cheap filter before tooltips
 --   Classify(itemID, tooltipLines) -> info table or nil
---   Rank(candidates, priority) -> sorts candidates in place, best first
+--   Rank(candidates, priority) -> sorts candidates in place, best first; may
+--                    set usable = false and unusableReason to skip one
 --   Describe(candidate) -> string for chat output (optional)
 --   MacroBody(candidate) -> macro text (optional; default "/use item:ID")
 -- Categories without statAliases have no priority; they rank on their own.
@@ -501,7 +506,10 @@ local function HandleSlash(input)
         end
         for i, candidate in ipairs(list) do
             local marker = (candidate == Rummage.currentPick[key]) and " |cff7fff7f<- current|r" or ""
-            local level = candidate.usable and "" or string.format(" |cffff7f7f(requires level %d)|r", candidate.minLevel)
+            local level = ""
+            if not candidate.usable then
+                level = string.format(" |cffff7f7f(%s)|r", candidate.unusableReason or ("requires level " .. candidate.minLevel))
+            end
             print(string.format("  %d. %s x%d%s%s", i, DescribeCandidate(category, candidate), candidate.count, level, marker))
         end
         return

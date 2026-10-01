@@ -6,6 +6,7 @@ Stop dragging a new potion or a new stack of food onto your bars every time you 
 
 ## What's new
 
+- **0.2.0**: SmartFlask now knows your class. Out of the box it picks the elixir that fits your class and talents (Agility for hunters, Spell Power for mages, Strength for warriors and Retribution paladins, and so on), and it never wastes an elixir your class gets nothing from. Rejuvenation potions are saved until your pure health or mana potions run out. Mageblood is read as mana regen.
 - **0.1.0**: First release.
 
 Full history on the Changelog tab of each file.
@@ -18,15 +19,31 @@ Full history on the Changelog tab of each file.
 | --- | --- |
 | SmartFood | Food with your preferred Well Fed buff, read from the tooltip |
 | SmartDrink | The drink that restores the most mana (water, juice, conjured water) |
-| SmartFlask | Flasks and elixirs by your stat priority |
-| SmartHealthPotion | The potion that restores the most health |
-| SmartManaPotion | The potion that restores the most mana |
+| SmartFlask | Flasks and elixirs that fit your class and talents, or your own stat priority |
+| SmartHealthPotion | The potion that restores the most health (Rejuvenation potions last) |
+| SmartManaPotion | The potion that restores the most mana (Rejuvenation potions last) |
 | SmartBandage | The bandage that heals the most, used on yourself |
 | SmartQuestItem | The usable item of the quest that matters most right now |
 
 - Items above your level are skipped. Percent-based potions are valued against your current maximum.
 - The slot shows the chosen item's icon and stack count.
 - Each macro can be switched off on its own.
+
+## Elixirs that fit your class
+
+Until you set your own priority, SmartFlask follows your class and talent tree, based on the Icy Veins WoW Forever guides:
+
+| Class / role | Picks first |
+| --- | --- |
+| Warrior, Retribution and Protection Paladin, Enhancement Shaman, Feral Druid | Strength, Attack Power, Agility |
+| Rogue, Hunter | Agility, Attack Power |
+| Mage | Spell Power, Spirit, Intellect |
+| Warlock | Spell Power, Stamina, Intellect |
+| Priest, and Holy, Restoration, Balance and Elemental hybrids | Spell Power, then Mana/5, Spirit and Intellect |
+
+- Stamina, Health and Armor elixirs are always a last resort, so the slot is rarely empty.
+- Elixirs that only give stats your class cannot use (Strength on a mage, Intellect on a rogue) are skipped instead of wasted. They show as "no use to your class" when you hover the icon. Add the stat to your own priority if you want them used anyway.
+- Hybrids that have not spent talent points yet get a mixed list. Druids lead with casting, paladins and shamans with Strength.
 
 ## Setup in one step
 

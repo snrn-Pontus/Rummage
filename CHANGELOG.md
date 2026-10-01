@@ -1,5 +1,12 @@
 # Rummage changelog
 
+## 0.2.0 — Class-aware elixirs
+
+- **Class-aware flask/elixir defaults.** Without a saved priority, `SmartFlask` now ranks by your class and talent tree (melee: Strength/Agility and Attack Power; casters: Spell Power, then Spirit/Intellect), after the Icy Veins WoW Forever guides.
+- Elixirs that only give stats your class cannot use are skipped instead of wasted, unless you list that stat in your own priority.
+- Rejuvenation-style potions (health and mana) now rank after pure health and mana potions in `SmartHealthPotion` and `SmartManaPotion`, and are used once those run out.
+- Mana-over-time elixirs (Mageblood: "regenerate 3 mana every 5 seconds") are now read as Mana/5 instead of maximum Mana.
+
 ## 0.1.0 — First release
 
 Rummage is part of the SNRN addon family.

@@ -6,6 +6,7 @@ package-as: Rummage
 ignore:
   - assets
   - screenshots
+  - tests
   - CHANGELOG.md
 
 manual-changelog: CHANGELOG.md
