@@ -88,7 +88,9 @@ The Settings page (**Settings > AddOns > Rummage**) is built so WoW: Forever's g
 ## Part of the SNRN family
 
 - **[SNRN Backhand](https://www.curseforge.com/wow/addons/snrn-backhand)**: extra action slots for your controller's rear paddles, built into Forever's crossbar.
-- **[SNRN Tally](https://www.curseforge.com/wow/addons/snrn-tally)**: free bag slots and ammo count on Forever's gamepad HUD, which shows neither. Tally tells you your bags are filling up; Rummage keeps the right stack on your bar.
+- **[SNRN Tally](https://www.curseforge.com/wow/addons/snrn-tally-bag-ammo-counter)**: free bag slots and ammo count on Forever's gamepad HUD, which shows neither. Tally tells you your bags are filling up; Rummage keeps the right stack on your bar.
+- **[SNRN Valet](https://www.curseforge.com/wow/addons/snrn-valet)**: sells greys and repairs at merchants, collects your mail, and declines duels, guild invites and charters.
+- **[SNRN Grimoire](https://www.curseforge.com/wow/addons/snrn-grimoire)**: one command lays out an Affliction Warlock on Forever's crossbar, with Rummage's Smart macros on the consumable slots.
 
 ## Reporting problems
 
