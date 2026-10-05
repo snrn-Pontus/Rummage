@@ -18,10 +18,33 @@ local function GetItemIcon(itemID)
     if C_Item and C_Item.GetItemIconByID then
         return C_Item.GetItemIconByID(itemID)
     end
-    if GetItemIcon then
-        return GetItemIcon(itemID)
+    if _G.GetItemIcon then
+        return _G.GetItemIcon(itemID)
     end
     return nil
+end
+
+local function GetItemCooldown(itemID)
+    if C_Item and C_Item.GetItemCooldown then
+        return C_Item.GetItemCooldown(itemID)
+    end
+    if C_Container and C_Container.GetItemCooldown then
+        return C_Container.GetItemCooldown(itemID)
+    end
+    if _G.GetItemCooldown then
+        return _G.GetItemCooldown(itemID)
+    end
+    return 0, 0, 1
+end
+
+local function IsUsableItem(itemID)
+    if C_Item and C_Item.IsUsableItem then
+        return C_Item.IsUsableItem(itemID)
+    end
+    if _G.IsUsableItem then
+        return _G.IsUsableItem(itemID)
+    end
+    return true, false
 end
 
 local function PickupCategoryMacro(key)
@@ -168,6 +191,9 @@ local function BuildRow(parent, key, y)
     icon.border:SetPoint("TOPLEFT", -12, 12)
     icon.border:SetPoint("BOTTOMRIGHT", 12, -12)
 
+    icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate")
+    icon.cooldown:SetAllPoints(icon.texture)
+
     icon.count = icon:CreateFontString(nil, "OVERLAY", "NumberFontNormal")
     icon.count:SetPoint("BOTTOMRIGHT", -2, 2)
 
@@ -242,6 +268,28 @@ local function BuildRow(parent, key, y)
     return y - ROW_HEIGHT - (category.statAliases and 40 or 0)
 end
 
+-- Cooldown sweep and usability tint for the picked item, the way native
+-- action buttons show them (grey when unusable, blue when short of mana).
+local function RefreshItemState(row)
+    local pick = Rummage.currentPick[row.key]
+    local icon = row.icon
+    if not pick then
+        CooldownFrame_Set(icon.cooldown, 0, 0, false)
+        icon.texture:SetVertexColor(1, 1, 1)
+        return
+    end
+    local start, duration, enable = GetItemCooldown(pick.itemID)
+    CooldownFrame_Set(icon.cooldown, start or 0, duration or 0, enable)
+    local usable, noMana = IsUsableItem(pick.itemID)
+    if usable then
+        icon.texture:SetVertexColor(1, 1, 1)
+    elseif noMana then
+        icon.texture:SetVertexColor(0.5, 0.5, 1)
+    else
+        icon.texture:SetVertexColor(0.4, 0.4, 0.4)
+    end
+end
+
 local function RefreshRow(row)
     local key = row.key
     local category = Rummage.GetCategory(key)
@@ -258,6 +306,7 @@ local function RefreshRow(row)
         row.icon.count:SetText("")
         row.current:SetText("|cff9d9d9dNothing suitable in your bags|r")
     end
+    RefreshItemState(row)
     row.icon.texture:SetDesaturated(not enabled)
     row.icon:SetAlpha(enabled and 1 or 0.5)
     row.title:SetAlpha(enabled and 1 or 0.5)
@@ -265,6 +314,15 @@ local function RefreshRow(row)
         UpdateDropdownText(row.prefer, key, 1)
         UpdateDropdownText(row.fallback, key, 2)
         row.order:SetText("Order: " .. Rummage.PriorityToText(key))
+    end
+end
+
+local function RefreshItemStates()
+    if not frame or not frame:IsShown() then
+        return
+    end
+    for _, row in ipairs(rows) do
+        RefreshItemState(row)
     end
 end
 
@@ -325,6 +383,11 @@ local function Build()
 
     frame:SetSize(WIDTH, -y + 56)
     frame:SetScript("OnShow", ns.window.Refresh)
+    frame:RegisterEvent("BAG_UPDATE_COOLDOWN")
+    frame:RegisterEvent("SPELL_UPDATE_USABLE")
+    frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+    frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    frame:SetScript("OnEvent", RefreshItemStates)
     tinsert(UISpecialFrames, "RummageWindow")
     frame:Hide()
 end
