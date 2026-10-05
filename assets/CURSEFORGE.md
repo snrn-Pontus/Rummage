@@ -6,6 +6,7 @@ Stop dragging a new potion or a new stack of food onto your bars every time you 
 
 ## What's new
 
+- **0.3.0**: The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now.
 - **0.2.0**: SmartFlask now knows your class. Out of the box it picks the elixir that fits your class and talents (Agility for hunters, Spell Power for mages, Strength for warriors and Retribution paladins, and so on), and it never wastes an elixir your class gets nothing from. Rejuvenation potions are saved until your pure health or mana potions run out. Mageblood is read as mana regen.
 - **0.1.0**: First release.
 

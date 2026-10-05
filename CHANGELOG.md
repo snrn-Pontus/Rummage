@@ -1,6 +1,6 @@
 # Rummage changelog
 
-## Unreleased
+## 0.3.0 — Cooldowns in the window
 
 - The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now (#2).
 
