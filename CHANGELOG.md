@@ -1,5 +1,9 @@
 # Rummage changelog
 
+## Unreleased
+
+- The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now (#2).
+
 ## 0.2.0 — Class-aware elixirs
 
 - **Class-aware flask/elixir defaults.** Without a saved priority, `SmartFlask` now ranks by your class and talent tree (melee: Strength/Agility and Attack Power; casters: Spell Power, then Spirit/Intellect), after the Icy Veins WoW Forever guides.
