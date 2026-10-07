@@ -21,6 +21,7 @@ Full history on the Changelog tab of each file.
 | SmartFood | Food with your preferred Well Fed buff, read from the tooltip |
 | SmartDrink | The drink that restores the most mana (water, juice, conjured water) |
 | SmartFlask | Flasks and elixirs that fit your class and talents, or your own stat priority |
+| SmartScroll | Stat scrolls that fit your class, highest rank first, used on yourself |
 | SmartHealthPotion | The potion that restores the most health (Rejuvenation potions last) |
 | SmartManaPotion | The potion that restores the most mana (Rejuvenation potions last) |
 | SmartBandage | The bandage that heals the most, used on yourself |
@@ -73,6 +74,7 @@ The Settings page (**Settings > AddOns > Rummage**) is built so WoW: Forever's g
 /rummage list food              every food in your bags, ranked
 /rummage food haste crit sta    set the food stat priority
 /rummage flask str agi          set the flask stat priority
+/rummage scroll sta str         set the scroll stat priority
 /rummage <category> reset       back to the default priority
 /rummage <category> on|off      stop or resume updating a macro
 /rummage pickup <category>      put a macro on the cursor
