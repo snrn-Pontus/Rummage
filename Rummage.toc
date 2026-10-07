@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Title: |cff33ccffSNRN|r Rummage
-## Notes: One macro per item type that always uses the best item in your bags: food and flasks by stat priority, drinks, potions and bandages by amount, and the quest item you need right now.
+## Notes: One macro per item type that always uses the best item in your bags: food, flasks and scrolls by stat priority, drinks, potions and bandages by amount, and the quest item you need right now.
 ## Author: SillyNameRandomNumber
 ## Version: 0.3.0
 ## IconTexture: Interface\AddOns\Rummage\Media\Icon.tga
@@ -20,6 +20,7 @@ Categories/Food.lua
 Categories/Drink.lua
 Categories/Potions.lua
 Categories/Flask.lua
+Categories/Scroll.lua
 Categories/Bandage.lua
 Categories/Quest.lua
 Window.lua

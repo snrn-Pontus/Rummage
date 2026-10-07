@@ -11,6 +11,7 @@ Built for **World of Warcraft: Forever** (Interface 16001). It only uses standar
 | `food` | SmartFood | Food by your stat priority, read from the Well Fed text |
 | `drink` | SmartDrink | The drink (water, juice, conjured water) that restores the most mana |
 | `flask` | SmartFlask | Flasks and elixirs by your stat priority |
+| `scroll` | SmartScroll | Stat scrolls by your stat priority, used on yourself |
 | `healthpotion` | SmartHealthPotion | The potion that restores the most health |
 | `manapotion` | SmartManaPotion | The potion that restores the most mana |
 | `bandage` | SmartBandage | The bandage that heals the most, used on yourself |
@@ -53,6 +54,10 @@ Same priority mechanism as food, with its own list (`/rummage flask str agi int`
 
 Hybrids without a talent tree yet get a mixed list (druids lead with casting). Stamina, Health and Armor are always on the list as a last resort. Elixirs that only give stats your class gets nothing from (Strength or Agility on a mage, Intellect or Spirit on a rogue) are skipped instead of wasted, and show as "no use to your class". Add the stat to your priority if you want them used anyway. Battle and guardian elixirs are not told apart yet: the macro uses the single best match, so keep the other elixir type on a separate slot if you use both.
 
+### Scrolls
+
+SmartScroll picks among stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) with the same mechanism and class defaults as flasks, under its own priority (`/rummage scroll str sta`). The highest rank of a matching scroll wins, and scrolls your class gets nothing from are skipped. A scroll buffs your target if you have one, so the macro always uses it on you (`/use [@player]`). It does not check whether the buff is already on you yet.
+
 ### Drinks
 
 SmartDrink uses whatever you sit down and drink that restores the most mana: water, juice, conjured water, and food that restores mana as well. Mana potions are not drinks and stay on SmartManaPotion. No priority to set.
@@ -67,7 +72,7 @@ No priority to set; the strongest item wins. Potions that restore both health an
 
 - the icon of the item it currently uses (question mark if none), with its count and cooldown. It dims like an action button when the item cannot be used right now. Drag it, or click it, and drop on any action slot, including Backhand paddles. Hover it to see every candidate in ranked order.
 - a checkbox to stop or resume updating that macro.
-- for food and flasks, two dropdowns: **Preferred buff** (the stat you want, for example Haste) and **If none, then** (the fallback when you carry no food with it). "Any (strongest)" ranks purely by amount. The full order is shown next to them; **Default** restores the built-in list.
+- for food, flasks and scrolls, two dropdowns: **Preferred buff** (the stat you want, for example Haste) and **If none, then** (the fallback when you carry no food with it). "Any (strongest)" ranks purely by amount. The full order is shown next to them; **Default** restores the built-in list.
 
 Press Escape or **Close** to hide it.
 
@@ -83,7 +88,7 @@ Everything in the window also has a command, mostly for macros and keybinds:
 /rummage                        open or close the window
 /rummage status                 print what each macro currently uses
 /rummage list food              every food in bags, ranked, with parsed stats
-/rummage <category> <stats...>  set that category's stat priority (food, flask)
+/rummage <category> <stats...>  set that category's stat priority (food, flask, scroll)
 /rummage <category> reset       back to the default priority
 /rummage <category> on|off      stop or resume updating that macro
 /rummage pickup <category>      put that macro on the cursor

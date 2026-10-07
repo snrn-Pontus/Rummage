@@ -1,5 +1,9 @@
 # Rummage changelog
 
+## Unreleased
+
+- **SmartScroll** (#1): stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) by your stat priority, with the same class and talent defaults as flasks. The highest rank wins, scrolls your class gets nothing from are skipped, and the macro always uses the scroll on yourself.
+
 ## 0.3.0 — Cooldowns in the window
 
 - The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now (#2).

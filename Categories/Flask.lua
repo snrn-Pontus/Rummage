@@ -187,6 +187,9 @@ local function Rank(candidates, priority)
     end
 end
 
+-- Scrolls rank the same way: same class defaults, same skipping.
+ns.classStats = { DefaultPriority = DefaultPriority, Rank = Rank }
+
 local function Describe(candidate)
     local statText = stats.DescribeStats(candidate)
     return (candidate.link or candidate.name or ("item:" .. candidate.itemID))
