@@ -19,6 +19,7 @@ Full history on the Changelog tab of each file.
 | Macro | Uses |
 | --- | --- |
 | SmartFood | Food with your preferred Well Fed buff, read from the tooltip |
+| SmartPlainFood | Food without a buff that restores the most health, so healing up never spends buff food |
 | SmartDrink | The drink that restores the most mana (water, juice, conjured water) |
 | SmartFlask | Flasks and elixirs that fit your class and talents, or your own stat priority |
 | SmartHealthPotion | The potion that restores the most health (Rejuvenation potions last) |

@@ -1,5 +1,10 @@
 # Rummage changelog
 
+## Unreleased
+
+- **Buff food and plain food are separate macros.** `SmartFood` now only uses buff food (Well Fed), by your stat priority as before. The new `SmartPlainFood` eats food without a buff, most health first, so healing up between pulls no longer spends buff food. Saved food priorities and `/rummage food <stats>` are unchanged.
+- **Fixed macros not updating until `/reload`.** A bag item's tooltip read before the client had loaded the item or its "Use:" spell text was cached for the whole session, so freshly looted bandages, potions or food of a kind you had not carried since login could be ignored (for example after running out). Incomplete tooltips are no longer cached; Rummage requests the missing data and rescans when it arrives.
+
 ## 0.3.0 — Cooldowns in the window
 
 - The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now (#2).

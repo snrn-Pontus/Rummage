@@ -8,7 +8,8 @@ Built for **World of Warcraft: Forever** (Interface 16001). It only uses standar
 
 | Category | Macro | Picks |
 | --- | --- | --- |
-| `food` | SmartFood | Food by your stat priority, read from the Well Fed text |
+| `food` | SmartFood | Buff food by your stat priority, read from the Well Fed text |
+| `plainfood` | SmartPlainFood | Food without a buff that restores the most health |
 | `drink` | SmartDrink | The drink (water, juice, conjured water) that restores the most mana |
 | `flask` | SmartFlask | Flasks and elixirs by your stat priority |
 | `healthpotion` | SmartHealthPotion | The potion that restores the most health |
@@ -24,10 +25,12 @@ The quest log attaches a usable item to some quests (the one the objective track
 
 ### Food
 
-Rummage reads the Well Fed text of every food item in your bags and ranks by the stats you care about.
+Food is split in two macros, so you can eat to heal up without spending buff food:
 
-- Food with your top-priority stat wins. Among those, the largest amount wins.
-- If you carry nothing with a listed stat, food with any other stat comes next, then plain food by health restored.
+- **SmartPlainFood** eats food that gives no buff, the one that restores the most health first. It never touches Well Fed food.
+- **SmartFood** eats buff food only. Rummage reads the Well Fed text of every food item in your bags and ranks by the stats you care about:
+  - Food with your top-priority stat wins. Among those, the largest amount wins.
+  - If you carry nothing with a listed stat, buff food with any other stat comes next.
 - Drinks that only restore mana are ignored; they have their own `drink` macro.
 
 Pick your preferred buff in the `/rum` window, or set the whole order by command:

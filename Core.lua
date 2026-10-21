@@ -243,7 +243,14 @@ local function ScanBags()
                             if existing then
                                 existing.count = existing.count + count
                             else
-                                lines = lines or ns.GetBagItemTooltipLines(bag, slot, itemID)
+                                if not lines then
+                                    local complete
+                                    lines, complete = ns.GetBagItemTooltipLines(bag, slot, itemID)
+                                    if not complete then
+                                        -- Rescan when the item or spell data arrives.
+                                        waitingForItemInfo = true
+                                    end
+                                end
                                 local info = category.Classify(itemID, lines)
                                 if info then
                                     info.itemID = itemID
@@ -598,6 +605,10 @@ frame:RegisterEvent("BAG_UPDATE_DELAYED")
 frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 frame:RegisterEvent("PLAYER_LEVEL_UP")
 frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+-- Not every client has these; the tooltip code asks for item and spell data
+-- through them when a bag item's tooltip is incomplete.
+pcall(frame.RegisterEvent, frame, "ITEM_DATA_LOAD_RESULT")
+pcall(frame.RegisterEvent, frame, "SPELL_DATA_LOAD_RESULT")
 
 frame:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
@@ -614,8 +625,9 @@ frame:SetScript("OnEvent", function(_, event, arg1)
     elseif event == "PLAYER_LEVEL_UP" then
         ns.ClearTooltipCache()
         Rummage.RequestScan()
-    elseif event == "GET_ITEM_INFO_RECEIVED" then
-        -- Item data arriving late can change minLevel or tooltip text.
+    elseif event == "GET_ITEM_INFO_RECEIVED" or event == "ITEM_DATA_LOAD_RESULT"
+        or event == "SPELL_DATA_LOAD_RESULT" then
+        -- Item or spell data arriving late can change minLevel or tooltip text.
         if waitingForItemInfo then
             Rummage.RequestScan()
         end
