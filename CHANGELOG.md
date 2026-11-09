@@ -1,5 +1,10 @@
 # Rummage changelog
 
+## Unreleased
+
+- **SmartScroll** (#1): stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) by your stat priority, with the same class and talent defaults as flasks. The highest rank wins, scrolls your class gets nothing from are skipped, and the macro always uses the scroll on yourself.
+- "Any (strongest)" now really means any: scrolls and elixirs your class gets nothing from are no longer skipped when that is your first choice.
+
 ## 0.4.0 — Plain food
 
 - **Buff food and plain food are separate macros.** `SmartFood` now only uses buff food (Well Fed), by your stat priority as before. The new `SmartPlainFood` eats food without a buff, most health first, so healing up between pulls no longer spends buff food. Saved food priorities and `/rummage food <stats>` are unchanged.

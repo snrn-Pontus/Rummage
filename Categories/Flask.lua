@@ -166,7 +166,8 @@ local function Rank(candidates, priority)
     stats.RankByPriority(candidates, priority)
     local profile = PlayerProfile()
     local useless = profile and profile.useless
-    if not useless then
+    -- An empty priority is "Any (strongest)": the player asked for anything.
+    if not useless or #priority == 0 then
         return
     end
     local kept, wasted = {}, {}
@@ -186,6 +187,9 @@ local function Rank(candidates, priority)
         candidates[index] = candidate
     end
 end
+
+-- Scrolls rank the same way: same class defaults, same skipping.
+ns.classStats = { DefaultPriority = DefaultPriority, Rank = Rank }
 
 local function Describe(candidate)
     local statText = stats.DescribeStats(candidate)
