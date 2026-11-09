@@ -2,10 +2,16 @@ local _, ns = ...
 local Rummage = ns.core
 local stats = ns.stats
 
--- Food: anything you sit down and eat that restores health, ranked by the
--- Well Fed stats it gives. Stats are read from the item tooltip so the addon
--- does not need a per-patch item table; OVERRIDES below fills the gaps for
--- items whose tooltip cannot be parsed.
+-- Food comes in two macros, so healing up never spends buff food:
+--
+--   SmartFood       buff food (gives Well Fed), ranked by the stats it gives.
+--                   Keeps the "food" key so saved priorities and
+--                   /rummage food <stats> still apply.
+--   SmartPlainFood  food that only restores health, most health first.
+--
+-- Stats are read from the item tooltip so the addon does not need a
+-- per-patch item table; OVERRIDES below fills the gaps for buff food whose
+-- tooltip cannot be parsed.
 
 -- Manual data for items whose tooltip does not parse. Keyed by item ID.
 -- Example: [12345] = { HASTE = 20 }
@@ -14,20 +20,18 @@ local OVERRIDES = {
 
 local IGNORE = { HEALTH = true, MANA = true }
 
+local function IsWellFed(text)
+    return text:find("well fed", 1, true) ~= nil
+end
+
+-- Buff food: anything that gives Well Fed (or is listed in OVERRIDES).
 local function Classify(itemID, lines)
     local text = stats.Normalise(table.concat(lines, "\n"))
-    local wellFed = text:find("well fed", 1, true) ~= nil
-    local seated = text:find("must remain seated", 1, true) ~= nil
+    local wellFed = IsWellFed(text)
     local health = stats.ParseRestore(text, "health")
-    local mana = stats.ParseRestore(text, "mana")
 
-    if not OVERRIDES[itemID] then
-        if not wellFed and not (seated and health) then
-            return nil
-        end
-        if mana and not health and not wellFed then
-            return nil -- pure drink
-        end
+    if not OVERRIDES[itemID] and not wellFed then
+        return nil
     end
 
     local found = {}
@@ -52,6 +56,42 @@ local function Classify(itemID, lines)
     }
 end
 
+-- Plain food: seated food that restores health and gives no buff.
+local function ClassifyPlain(itemID, lines)
+    if OVERRIDES[itemID] then
+        return nil
+    end
+    local text = stats.Normalise(table.concat(lines, "\n"))
+    if IsWellFed(text) or not text:find("must remain seated", 1, true) then
+        return nil
+    end
+    local health = stats.ParseRestore(text, "health", UnitHealthMax("player"))
+    if not health then
+        return nil -- pure drink
+    end
+    return {
+        name = lines[1],
+        amount = health,
+    }
+end
+
+local function RankPlain(candidates)
+    table.sort(candidates, function(a, b)
+        if a.amount ~= b.amount then return a.amount > b.amount end
+        if a.count ~= b.count then return a.count > b.count end
+        return a.itemID < b.itemID
+    end)
+end
+
+local function Prefilter(itemID, classID, subclassID)
+    if OVERRIDES[itemID] then
+        return true
+    end
+    -- Some clients file food under other consumable subclasses, so only
+    -- non-consumables are skipped here; the tooltip decides the rest.
+    return classID == nil or classID == stats.CONSUMABLE_CLASS
+end
+
 local function Rank(candidates, priority)
     stats.RankByPriority(candidates, priority, IGNORE)
 end
@@ -64,20 +104,25 @@ end
 
 Rummage.RegisterCategory({
     key = "food",
-    label = "Food",
+    label = "Buff food",
     macroName = "SmartFood",
     defaultPriority = { "HASTE", "CRIT", "MASTERY", "VERS", "STAMINA", "SPIRIT", "STRENGTH", "AGILITY", "INTELLECT", "AP", "SP" },
     statAliases = stats.aliases,
     statLabels = stats.labels,
-    Prefilter = function(itemID, classID, subclassID)
-        if OVERRIDES[itemID] then
-            return true
-        end
-        -- Some clients file food under other consumable subclasses, so only
-        -- non-consumables are skipped here; the tooltip decides the rest.
-        return classID == nil or classID == stats.CONSUMABLE_CLASS
-    end,
+    Prefilter = Prefilter,
     Classify = Classify,
     Rank = Rank,
     Describe = Describe,
+})
+
+Rummage.RegisterCategory({
+    key = "plainfood",
+    label = "Plain food",
+    macroName = "SmartPlainFood",
+    Prefilter = Prefilter,
+    Classify = ClassifyPlain,
+    Rank = RankPlain,
+    Describe = function(candidate)
+        return string.format("%s (%d health)", candidate.link or candidate.name or ("item:" .. candidate.itemID), candidate.amount)
+    end,
 })

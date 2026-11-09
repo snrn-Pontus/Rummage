@@ -6,6 +6,7 @@ Stop dragging a new potion or a new stack of food onto your bars every time you 
 
 ## What's new
 
+- **0.4.0**: New SmartPlainFood macro eats food without a buff, so healing up between pulls never spends your buff food; SmartFood now only uses Well Fed food. Also fixes newly looted bandages, potions or food not showing up in their macro until /reload.
 - **0.3.0**: The `/rum` window icons show the item's cooldown sweep and dim like native action buttons when the item cannot be used right now.
 - **0.2.0**: SmartFlask now knows your class. Out of the box it picks the elixir that fits your class and talents (Agility for hunters, Spell Power for mages, Strength for warriors and Retribution paladins, and so on), and it never wastes an elixir your class gets nothing from. Rejuvenation potions are saved until your pure health or mana potions run out. Mageblood is read as mana regen.
 - **0.1.0**: First release.
@@ -19,6 +20,7 @@ Full history on the Changelog tab of each file.
 | Macro | Uses |
 | --- | --- |
 | SmartFood | Food with your preferred Well Fed buff, read from the tooltip |
+| SmartPlainFood | Food without a buff that restores the most health, so healing up never spends buff food |
 | SmartDrink | The drink that restores the most mana (water, juice, conjured water) |
 | SmartFlask | Flasks and elixirs that fit your class and talents, or your own stat priority |
 | SmartScroll | Stat scrolls that fit your class, highest rank first, used on yourself |
