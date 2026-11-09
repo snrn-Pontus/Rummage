@@ -5,6 +5,7 @@
 - **SmartFoodDrink** (optional): one macro that eats your plain food and drinks your drink in the same click, to save an action slot. Off by default; turn it on in the `/rum` window, the settings page or with `/rummage fooddrink on`. It replaces SmartPlainFood and SmartDrink while it is on.
 - **SmartScroll** (#1): stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) by your stat priority, with the same class and talent defaults as flasks. The highest rank wins, scrolls your class gets nothing from are skipped, and the macro always uses the scroll on yourself.
 - "Any (strongest)" now really means any: scrolls and elixirs your class gets nothing from are no longer skipped when that is your first choice.
+- **Rummage bar:** an AutoBar-style bar with one button per category you carry something for, each using the same best item as its Smart macro. It grows and shrinks with your bags, shows counts and cooldowns, and can be moved, locked, turned vertical or scaled. Toggle it in the `/rum` window, on the settings page, or with `/rum bar`.
 
 ## 0.4.0 — Plain food
 

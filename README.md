@@ -84,6 +84,23 @@ No priority to set; the strongest item wins. Potions that restore both health an
 
 Press Escape or **Close** to hide it.
 
+## The bar
+
+Next to the macros, Rummage can show its own bar: one button per category you carry something for, each using that category's current pick (the same item its Smart macro uses). Buttons appear and disappear as your bags change, so the bar only ever holds what you can actually use. Each button shows the item's count and cooldown, dims when it cannot be used, and its tooltip is the item's tooltip plus how many other candidates you carry. Disabled categories are left off.
+
+It is on by default. While unlocked it has a dark background and a small blue handle at its top-left corner: drag the handle to move it, then lock it. Options are in the settings page and under `/rum bar`:
+
+```
+/rummage bar                     show or hide the bar
+/rummage bar lock|unlock         lock it, or show the drag handle
+/rummage bar vertical|horizontal change its direction
+/rummage bar empty               also show categories with nothing in your bags
+/rummage bar scale 1.2           resize it (0.5 to 2)
+/rummage bar reset               move it back to the default spot
+```
+
+Like the macros, the bar can only change outside combat: an item you run out of mid-fight stays on its (dimmed) button until the fight ends, and the bar cannot be moved or reconfigured in combat.
+
 ## Settings page
 
 **Settings > AddOns > Rummage** (or `/rum config`) has the same controls: the current item's icon to drag onto a slot, the on/off checkbox per category, the preferred buff and fallback as click-to-cycle buttons (left-click next, right-click previous), a Default button, and a debug toggle. It uses cycle buttons instead of dropdowns on purpose; see the gamepad note below.

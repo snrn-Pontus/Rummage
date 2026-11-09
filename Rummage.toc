@@ -25,4 +25,5 @@ Categories/Scroll.lua
 Categories/Bandage.lua
 Categories/Quest.lua
 Window.lua
+Bar.lua
 Settings.lua

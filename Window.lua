@@ -336,6 +336,9 @@ function ns.window.Refresh()
     for _, row in ipairs(rows) do
         RefreshRow(row)
     end
+    if frame.showBar and ns.bar then
+        frame.showBar:SetChecked(ns.bar.Get("shown"))
+    end
 end
 
 local function Build()
@@ -383,6 +386,29 @@ local function Build()
     rescan:SetPoint("RIGHT", close, "LEFT", -6, 0)
     rescan:SetText("Rescan bags")
     rescan:SetScript("OnClick", function() Rummage.RequestScan() end)
+
+    local showBar = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    showBar:SetSize(24, 24)
+    showBar:SetPoint("BOTTOMLEFT", 18, 15)
+    showBar.label = showBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    showBar.label:SetPoint("LEFT", showBar, "RIGHT", 2, 0)
+    showBar.label:SetText("Show the Rummage bar")
+    showBar:SetScript("OnClick", function(self)
+        if InCombatLockdown() then
+            self:SetChecked(ns.bar.Get("shown"))
+            Rummage.Print("the bar cannot be changed in combat")
+            return
+        end
+        ns.bar.Set("shown", self:GetChecked() and true or false)
+    end)
+    showBar:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Rummage bar", 1, 1, 1)
+        GameTooltip:AddLine("A bar with one button per category you carry something for. Type /rum bar help for its options.", nil, nil, nil, true)
+        GameTooltip:Show()
+    end)
+    showBar:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    frame.showBar = showBar
 
     frame:SetSize(WIDTH, -y + 56)
     frame:SetScript("OnShow", ns.window.Refresh)

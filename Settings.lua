@@ -198,6 +198,9 @@ function ns.settings.Refresh()
     if general.debug then
         general.debug:SetChecked(RummageDB and RummageDB.debug or false)
     end
+    for option, check in pairs(general.bar or {}) do
+        check:SetChecked(ns.bar.Get(option))
+    end
     for _, row in ipairs(rows) do
         RefreshRow(row)
     end
@@ -266,6 +269,39 @@ function ns.settings.Register()
     end)
     general.debug = debug
     y = y - 34
+
+    local barHeader = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    barHeader:SetPoint("TOPLEFT", 6, y)
+    barHeader:SetText("Rummage bar")
+    y = y - 20
+
+    general.bar = {}
+    local barOptions = {
+        { option = "shown", label = "Show the Rummage bar", tip = "One button per category you carry something for, using the same item as its macro. It grows and shrinks as your bags change (outside combat)." },
+        { option = "locked", label = "Lock the bar", tip = "Hides the drag handle and the background." },
+        { option = "vertical", label = "Vertical", tip = "Stack the buttons top to bottom instead of left to right." },
+        { option = "showEmpty", label = "Show empty categories", tip = "Keep a question-mark button for categories with nothing in your bags." },
+    }
+    for _, entry in ipairs(barOptions) do
+        local check = CreateFrame("CheckButton", nil, content, "UICheckButtonTemplate")
+        check:SetPoint("TOPLEFT", 4, y)
+        check:SetSize(26, 26)
+        check.label = check:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        check.label:SetPoint("LEFT", check, "RIGHT", 4, 0)
+        check.label:SetText(entry.label)
+        check:SetScript("OnClick", function(self)
+            if InCombatLockdown() then
+                self:SetChecked(ns.bar.Get(entry.option))
+                Rummage.Print("the bar cannot be changed in combat")
+                return
+            end
+            ns.bar.Set(entry.option, self:GetChecked() and true or false)
+        end)
+        AttachTooltip(check, entry.label, entry.tip)
+        general.bar[entry.option] = check
+        y = y - 28
+    end
+    y = y - 6
 
     for _, key in ipairs(Rummage.GetCategoryKeys()) do
         local divider = content:CreateTexture(nil, "ARTWORK")

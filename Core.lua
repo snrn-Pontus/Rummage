@@ -346,6 +346,7 @@ local function MacroBody(category, pick)
     end
     return string.format("#showtooltip\n/run Rummage.Print(\"No %s in your bags.\")", category.label:lower())
 end
+Rummage.MacroBody = MacroBody   -- the bar runs the same text
 
 local function EnsureMacro(category, body)
     local index = GetMacroIndexByName(category.macroName)
@@ -413,6 +414,9 @@ local function RunScan()
     end
     if ns.window and ns.window.Refresh then
         ns.window.Refresh()
+    end
+    if ns.bar and ns.bar.Refresh then
+        ns.bar.Refresh()
     end
 end
 
@@ -493,6 +497,7 @@ local function PrintHelp()
     print("  /rummage <category> <stat> <stat> ...  - set the stat priority for this character")
     print("  /rummage <category> on|off  - enable or disable that macro")
     print("  /rummage pickup <category>  - put the macro on the cursor to drop on a slot")
+    print("  /rummage bar  - show or hide the Rummage bar (/rummage bar help for more)")
     print("  /rummage scan  - rescan bags now")
     print("  /rummage debug  - toggle debug output")
     local keys = {}
@@ -527,6 +532,11 @@ local function HandleSlash(input)
     elseif command == "config" or command == "options" or command == "settings" then
         if ns.settings and ns.settings.Open then
             ns.settings.Open()
+        end
+        return
+    elseif command == "bar" then
+        if ns.bar and ns.bar.HandleSlash then
+            ns.bar.HandleSlash(rest)
         end
         return
     elseif command == "scan" then
