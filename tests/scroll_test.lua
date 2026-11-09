@@ -174,6 +174,12 @@ Test("own priority overrides the class default and the skip", function()
     Expect(pick, "strength", "pick")
 end)
 
+Test("any (strongest) uses scrolls the class would skip", function()
+    Reset("MAGE")
+    local _, pick = Scan({ "agility" }, {})
+    Expect(pick, "agility", "pick")
+end)
+
 Test("protection paladin: strength, then stamina and armor", function()
     Reset("PALADIN")
     world.tabs = { { "Holy", 0 }, { "Protection", 8 }, { "Retribution", 0 } }
