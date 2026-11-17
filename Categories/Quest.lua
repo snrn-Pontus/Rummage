@@ -145,12 +145,8 @@ local function Classify(itemID, lines)
         }
     end
 
-    local text = table.concat(lines, "\n"):lower()
-    local usable = text:find("use:", 1, true) ~= nil
-    if not usable then
-        return nil
-    end
-    if text:find("begins a quest", 1, true) or text:find("starts a quest", 1, true) then
+    -- Quest starters are opened with a right-click and have no "Use:" line.
+    if ns.locale.StartsQuest(lines) then
         return {
             name = lines[1],
             rank = 5,

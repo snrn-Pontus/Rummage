@@ -18,8 +18,7 @@ local function IsPotion(itemID, subclassID, lines)
     if subclassID == stats.SUBCLASS.POTION then
         return true
     end
-    local name = lines and lines[1] and lines[1]:lower() or ""
-    return name:find("potion", 1, true) ~= nil or name:find("draught", 1, true) ~= nil
+    return ns.locale.NameHas("potion", lines and lines[1])
 end
 
 local function MakeClassifier(resource, maxFunc, otherResource)

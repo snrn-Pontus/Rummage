@@ -31,13 +31,13 @@ stats.STATS = {
     { key = "AGILITY",   label = "Agility",   phrases = { "agility" },                                 aliases = { "agility", "agi" } },
     { key = "INTELLECT", label = "Intellect", phrases = { "intellect" },                               aliases = { "intellect", "int" } },
     { key = "HASTE",     label = "Haste",     phrases = { "haste rating", "haste" },                   aliases = { "haste" } },
-    { key = "CRIT",      label = "Crit",      phrases = { "critical strike rating", "critical strike", "crit" }, aliases = { "crit", "critical", "criticalstrike" } },
+    { key = "CRIT",      label = "Crit",      phrases = { "critical strike rating", "critical strike", "critical hit", "crit" }, aliases = { "crit", "critical", "criticalstrike" } },
     { key = "MASTERY",   label = "Mastery",   phrases = { "mastery rating", "mastery" },               aliases = { "mastery", "mast" } },
     { key = "VERS",      label = "Versatility", phrases = { "versatility" },                           aliases = { "versatility", "vers", "versa" } },
     { key = "HIT",       label = "Hit",       phrases = { "hit rating" },                              aliases = { "hit" } },
     { key = "EXPERTISE", label = "Expertise", phrases = { "expertise rating", "expertise" },           aliases = { "expertise", "exp" } },
     { key = "AP",        label = "Attack Power", phrases = { "attack power" },                         aliases = { "ap", "attackpower", "attack" } },
-    { key = "SP",        label = "Spell Power", phrases = { "spell power" },                           aliases = { "sp", "spellpower", "spell" } },
+    { key = "SP",        label = "Spell Power", phrases = { "spell power", "spell damage", "spell shadow damage", "spell fire damage", "spell frost damage", "spell arcane damage", "spell nature damage", "magical spells" },                         aliases = { "sp", "spellpower", "spell" } },
     { key = "ARMOR",     label = "Armor",     phrases = { "armor" },                                   aliases = { "armor", "armour" } },
     { key = "MP5",       label = "Mana/5",    phrases = { "mana per 5 sec", "mana every 5 sec" },      aliases = { "mp5", "manaregen" } },
     { key = "HEALTH",    label = "Health",    phrases = { "maximum health", "max health", "health" },   aliases = { "health", "hp" } },
@@ -95,9 +95,19 @@ local function AddStat(result, key, amount)
     end
 end
 
--- Lower-cases a tooltip and drops thousands separators ("2,000 health").
+-- Lower-cases a tooltip, drops thousands separators ("2,000" and pt-BR
+-- "2.000") and decimals ("874.8 health" -> "874 health"), then rewrites
+-- non-English text into the English wording the parsers expect.
 function stats.Normalise(text)
-    local result = text:lower():gsub(",", "")
+    local result = text:lower()
+    local previous
+    repeat
+        previous = result
+        result = result:gsub("(%d)[.,](%d%d%d)%f[^%d]", "%1%2")
+    until result == previous
+    result = result:gsub("(%d)[.,]%d+", "%1"):gsub(",", "")
+    result = ns.locale.Translate(result)
+    result = result:gsub("by up to (%d+)", "by %1")
     return result
 end
 
@@ -129,16 +139,19 @@ function stats.ParseStats(line, result)
             end
         end
     end
+    -- "increases intellect and spirit by 18" gives both stats.
     for phrase, amount in line:gmatch("([%a%s]+)%s+by%s+(%d+)") do
-        local words = {}
-        for word in phrase:gmatch("%a+") do
-            words[#words + 1] = word
-        end
-        for start = math.max(1, #words - 3), #words do
-            local key = MatchStat(table.concat(words, " ", start))
-            if key then
-                AddStat(result, key, tonumber(amount))
-                break
+        for part in (phrase .. " and "):gmatch("(.-)%s+and%s+") do
+            local words = {}
+            for word in part:gmatch("%a+") do
+                words[#words + 1] = word
+            end
+            for start = math.max(1, #words - 3), #words do
+                local key = MatchStat(table.concat(words, " ", start))
+                if key then
+                    AddStat(result, key, tonumber(amount))
+                    break
+                end
             end
         end
     end
@@ -149,7 +162,13 @@ end
 -- health" -> that share of the player's max; "Heals 2000 damage over 8 sec"
 -- -> 2000. Returns nil when the text does not restore that resource.
 function stats.ParseRestore(text, resource, maxValue)
+    -- Regeneration ("8 mana every 5 sec") is a buff, not an amount restored.
+    text = text:gsub("%d+%s+%a+%s+every%s+5%s+sec%a*", " "):gsub("%d+%s+%a+%s+per%s+5%s+sec%a*", " ")
     local low, high = text:match("(%d+)%s+to%s+(%d+)%s+" .. resource)
+    if not high then
+        -- Rejuvenation: "restores 1440 to 1760 mana and health".
+        low, high = text:match("(%d+)%s+to%s+(%d+)%s+%a+%s+and%s+" .. resource)
+    end
     if high then
         return tonumber(high)
     end

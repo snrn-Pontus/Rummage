@@ -15,6 +15,7 @@
 
 Core.lua
 Tooltip.lua
+Locale.lua
 Categories/Stats.lua
 Categories/Food.lua
 Categories/Drink.lua

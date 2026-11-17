@@ -10,8 +10,7 @@ local function IsBandage(subclassID, lines)
     if subclassID == stats.SUBCLASS.BANDAGE then
         return true
     end
-    local name = lines and lines[1] and lines[1]:lower() or ""
-    return name:find("bandage", 1, true) ~= nil
+    return ns.locale.NameHas("bandage", lines and lines[1])
 end
 
 local function Classify(itemID, lines)
