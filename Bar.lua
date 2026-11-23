@@ -102,6 +102,10 @@ local function ShowTooltip(button)
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
     if pick and GameTooltip.SetItemByID then
         GameTooltip:SetItemByID(pick.itemID)
+        -- SmartFoodDrink shows the food; name the drink that comes with it.
+        if pick.food and pick.drink then
+            GameTooltip:AddLine("+ " .. (pick.drink.link or pick.drink.name or ("item:" .. pick.drink.itemID)), 1, 1, 1)
+        end
     else
         GameTooltip:SetText(category.label, 1, 1, 1)
         GameTooltip:AddLine("Nothing suitable in your bags.", 0.8, 0.8, 0.8, true)
