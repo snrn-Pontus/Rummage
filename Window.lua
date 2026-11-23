@@ -222,6 +222,9 @@ local function BuildRow(parent, key, y)
     enabled:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:SetText("Keep the " .. category.macroName .. " macro updated", 1, 1, 1)
+        if category.combinesNote then
+            GameTooltip:AddLine(category.combinesNote, nil, nil, nil, true)
+        end
         GameTooltip:Show()
     end)
     enabled:SetScript("OnLeave", function() GameTooltip:Hide() end)

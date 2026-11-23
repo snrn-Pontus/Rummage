@@ -126,6 +126,9 @@ local function BuildCategory(content, key, y)
     enabled:SetScript("OnClick", function(self)
         Rummage.SetCategoryEnabled(key, self:GetChecked())
     end)
+    if category.combinesNote then
+        AttachTooltip(enabled, enabled.label:GetText(), category.combinesNote)
+    end
     row.enabled = enabled
     y = y - 30
 

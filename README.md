@@ -11,6 +11,7 @@ Built for **World of Warcraft: Forever** (Interface 16001). It only uses standar
 | `food` | SmartFood | Buff food by your stat priority, read from the Well Fed text |
 | `plainfood` | SmartPlainFood | Food without a buff that restores the most health |
 | `drink` | SmartDrink | The drink (water, juice, conjured water) that restores the most mana |
+| `fooddrink` | SmartFoodDrink | Off by default. The SmartPlainFood and SmartDrink picks in one macro |
 | `flask` | SmartFlask | Flasks and elixirs by your stat priority |
 | `scroll` | SmartScroll | Stat scrolls by your stat priority, used on yourself |
 | `healthpotion` | SmartHealthPotion | The potion that restores the most health |
@@ -64,6 +65,10 @@ SmartScroll picks among stat scrolls (Stamina, Intellect, Spirit, Strength, Agil
 ### Drinks
 
 SmartDrink uses whatever you sit down and drink that restores the most mana: water, juice, conjured water, and food that restores mana as well. Mana potions are not drinks and stay on SmartManaPotion. No priority to set.
+
+### Food and drink in one slot
+
+Short on action slots? **SmartFoodDrink** eats your plain food and drinks your drink in one click (food and drink are off the global cooldown, so both go through). It uses the same items SmartPlainFood and SmartDrink would, and only one of them when you carry just food or just drink. It is off by default: tick it in the `/rum` window or settings, or type `/rummage fooddrink on`. Turning it on turns off the separate SmartPlainFood and SmartDrink macros; turning it off turns them back on.
 
 ### Potions and bandages
 
