@@ -20,11 +20,13 @@ local OVERRIDES = {
 
 local IGNORE = { HEALTH = true, MANA = true }
 
+-- Well Fed, or a buff without that wording (Blessed Sunfruit: "Also
+-- increases your Strength by 10").
 local function IsWellFed(text)
-    return text:find("well fed", 1, true) ~= nil
+    return text:find("well fed", 1, true) ~= nil or text:find("also increases your", 1, true) ~= nil
 end
 
--- Buff food: anything that gives Well Fed (or is listed in OVERRIDES).
+-- Buff food: anything that gives a buff (or is listed in OVERRIDES).
 local function Classify(itemID, lines)
     local text = stats.Normalise(table.concat(lines, "\n"))
     local wellFed = IsWellFed(text)
@@ -37,7 +39,7 @@ local function Classify(itemID, lines)
     local found = {}
     for _, line in ipairs(lines) do
         local lower = stats.Normalise(line)
-        if lower:find("well fed", 1, true) then
+        if IsWellFed(lower) then
             stats.ParseStats(lower, found)
         end
     end
@@ -106,7 +108,7 @@ Rummage.RegisterCategory({
     key = "food",
     label = "Buff food",
     macroName = "SmartFood",
-    defaultPriority = { "HASTE", "CRIT", "MASTERY", "VERS", "STAMINA", "SPIRIT", "STRENGTH", "AGILITY", "INTELLECT", "AP", "SP" },
+    defaultPriority = { "HASTE", "CRIT", "MASTERY", "VERS", "STAMINA", "SPIRIT", "STRENGTH", "AGILITY", "INTELLECT", "AP", "SP", "HEALING" },
     statAliases = stats.aliases,
     statLabels = stats.labels,
     Prefilter = Prefilter,

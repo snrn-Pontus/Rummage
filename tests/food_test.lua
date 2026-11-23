@@ -11,6 +11,11 @@ local FOOD = {
     jerky    = { id = 3, lines = { "Herb Baked Egg", "Use: Restores 61 health over 18 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 2 Stamina and Spirit for 15 min." } },
     sagefish = { id = 4, lines = { "Sagefish Delight", "Use: Restores 840 health and 630 mana over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 6 Mana every 5 seconds for 15 min." } },
     water    = { id = 5, lines = { "Refreshing Spring Water", "Use: Restores 151 mana over 18 sec. Must remain seated while drinking." } },
+    yellowtail = { id = 7, lines = { "Spotted Yellowtail", "Use: Restores 1,338 health over 30 sec. Must remain seated while eating. If you spend at least 10 sec eating, you will become well fed and gain 22 Spell Damage for 15 min. Additionally, experience gained from kills is increased by 5%. (1 Sec Cooldown)" } },
+    tea      = { id = 8, lines = { "Peace Tea", "Use: Restores 100 mana over 30 sec. Must remain seated while drinking. If you spend at least 10 sec eating, you will become well fed and gain 2 Healing Power for 15 min." } },
+    squid    = { id = 9, lines = { "Grilled Squid", "Use: Restores 874 health over 27 sec. Must remain seated while eating. If you spend at least 10 sec eating, you will become well fed and gain 1% Critical Strike chance for 15 min." } },
+    sunfruit = { id = 10, lines = { "Blessed Sunfruit", "Use: Restores 1933 health over 27 sec. Must remain seated while eating. Also increases your Strength by 10 for 10 min." } },
+    harvest  = { id = 11, lines = { "Harvest Bread", "Use: Restores 2% of your health per second for 25 sec. Must remain seated while eating." } },
     strudel  = { id = 6, lines = { "Conjured Mana Strudel", "Use: Restores 2148 health and 4410 mana over 30 sec. Must remain seated while eating." } },
 }
 
@@ -75,6 +80,24 @@ end)
 
 Test("buff food: priority still decides", function()
     Expect(Scan("food", ALL, { "MP5" }), "sagefish jerky", "order")
+end)
+
+Test("buff food: Spell Damage counts as Spell Power", function()
+    local _, list = Scan("food", { "yellowtail" })
+    Expect(list[1].stats.SP, 22, "spell power")
+    Expect(Scan("food", { "jerky", "yellowtail" }, { "SP", "STAMINA" }), "yellowtail jerky", "order")
+end)
+
+Test("buff food: Forever wording (Healing Power, % crit, no Well Fed)", function()
+    local _, list = Scan("food", { "tea", "squid", "sunfruit" }, { "HEALING", "CRIT", "STRENGTH" })
+    Expect(list[1].stats.HEALING, 2, "tea")
+    Expect(list[2].stats.CRIT, 1, "squid")
+    Expect(list[3].stats.STRENGTH, 10, "sunfruit")
+    Expect(Scan("plainfood", { "sunfruit" }), "", "sunfruit is not plain food")
+end)
+
+Test("plain food: percent per second food counts its whole heal", function()
+    Expect(Scan("plainfood", { "cheese", "harvest" }), "harvest cheese", "order")
 end)
 
 Test("buff food: nothing when you only carry plain food", function()

@@ -18,32 +18,34 @@ local OVERRIDES = {
 -- elixir that only gives those is never used unless you list the stat yourself.
 local MELEE_STR = { "STRENGTH", "AP", "AGILITY", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }
 local MELEE_AGI = { "AGILITY", "AP", "STRENGTH", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }
-local CASTER = { "SP", "INTELLECT", "SPIRIT", "MP5", "MANA", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }
-local NO_MANA = { INTELLECT = true, SPIRIT = true, SP = true, MP5 = true, MANA = true }
+local CASTER = { "SP", "HEALING", "INTELLECT", "SPIRIT", "MP5", "MANA", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }
+local NO_MANA = { INTELLECT = true, SPIRIT = true, SP = true, HEALING = true, MP5 = true, MANA = true }
 local NO_MELEE = { STRENGTH = true, AGILITY = true, AP = true }
+-- Mages and warlocks cannot heal.
+local NO_MELEE_NO_HEAL = { STRENGTH = true, AGILITY = true, AP = true, HEALING = true }
 
 local PROFILES = {
     WARRIOR = { default = { priority = MELEE_STR, useless = NO_MANA } },
     ROGUE = { default = { priority = MELEE_AGI, useless = NO_MANA } },
     HUNTER = { default = {
         priority = { "AGILITY", "AP", "CRIT", "HIT", "INTELLECT", "SPIRIT", "MP5", "STAMINA", "HEALTH", "ARMOR" },
-        useless = { STRENGTH = true, SP = true },
+        useless = { STRENGTH = true, SP = true, HEALING = true },
     } },
-    MAGE = { default = { priority = { "SP", "SPIRIT", "INTELLECT", "MP5", "MANA", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }, useless = NO_MELEE } },
-    WARLOCK = { default = { priority = { "SP", "STAMINA", "INTELLECT", "SPIRIT", "MP5", "MANA", "HEALTH", "CRIT", "HIT", "ARMOR" }, useless = NO_MELEE } },
-    PRIEST = { default = { priority = { "SP", "MP5", "SPIRIT", "INTELLECT", "MANA", "STAMINA", "HEALTH", "CRIT", "HIT", "ARMOR" }, useless = NO_MELEE } },
+    MAGE = { default = { priority = { "SP", "SPIRIT", "INTELLECT", "MP5", "MANA", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR" }, useless = NO_MELEE_NO_HEAL } },
+    WARLOCK = { default = { priority = { "SP", "STAMINA", "INTELLECT", "SPIRIT", "MP5", "MANA", "HEALTH", "CRIT", "HIT", "ARMOR" }, useless = NO_MELEE_NO_HEAL } },
+    PRIEST = { default = { priority = { "SP", "HEALING", "MP5", "SPIRIT", "INTELLECT", "MANA", "STAMINA", "HEALTH", "CRIT", "HIT", "ARMOR" }, useless = NO_MELEE } },
     PALADIN = {
-        default = { priority = { "STRENGTH", "AP", "AGILITY", "CRIT", "HIT", "INTELLECT", "STAMINA", "HEALTH", "ARMOR", "SP", "MP5", "SPIRIT" } },
+        default = { priority = { "STRENGTH", "AP", "AGILITY", "CRIT", "HIT", "INTELLECT", "STAMINA", "HEALTH", "ARMOR", "SP", "HEALING", "MP5", "SPIRIT" } },
         caster = { priority = CASTER, useless = NO_MELEE },
         tank = { priority = { "STRENGTH", "STAMINA", "ARMOR", "HEALTH", "AGILITY", "HIT", "AP", "INTELLECT" } },
     },
     SHAMAN = {
-        default = { priority = { "STRENGTH", "AGILITY", "AP", "INTELLECT", "CRIT", "HIT", "SP", "MP5", "STAMINA", "HEALTH", "ARMOR", "SPIRIT" } },
+        default = { priority = { "STRENGTH", "AGILITY", "AP", "INTELLECT", "CRIT", "HIT", "SP", "HEALING", "MP5", "STAMINA", "HEALTH", "ARMOR", "SPIRIT" } },
         caster = { priority = CASTER, useless = NO_MELEE },
     },
     DRUID = {
         -- Unspecced druids level on Wrath, so casting comes first.
-        default = { priority = { "SP", "INTELLECT", "SPIRIT", "STRENGTH", "AGILITY", "AP", "MP5", "STAMINA", "HEALTH", "ARMOR" } },
+        default = { priority = { "SP", "HEALING", "INTELLECT", "SPIRIT", "STRENGTH", "AGILITY", "AP", "MP5", "STAMINA", "HEALTH", "ARMOR" } },
         caster = { priority = CASTER, useless = NO_MELEE },
         melee = { priority = { "STRENGTH", "AGILITY", "AP", "CRIT", "HIT", "STAMINA", "HEALTH", "ARMOR", "INTELLECT" } },
         tank = { priority = { "STAMINA", "ARMOR", "AGILITY", "STRENGTH", "HEALTH", "HIT", "AP", "INTELLECT" } },

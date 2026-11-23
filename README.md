@@ -42,7 +42,7 @@ Pick your preferred buff in the `/rum` window, or set the whole order by command
 /rummage food any
 ```
 
-Words accepted: `stamina sta stam spirit spi strength str agility agi intellect int haste crit critical mastery mast versatility vers hit expertise exp ap attackpower sp spellpower armor mp5 health mana`.
+Words accepted: `stamina sta stam spirit spi strength str agility agi intellect int haste crit critical mastery mast versatility vers hit expertise exp ap attackpower sp spellpower healing heal armor mp5 hp5 health mana`.
 
 ### Flasks and elixirs
 
@@ -54,7 +54,7 @@ Same priority mechanism as food, with its own list (`/rummage flask str agi int`
 | Rogue, Hunter | Agility, Attack Power |
 | Mage | Spell Power, Spirit, Intellect |
 | Warlock | Spell Power, Stamina, Intellect |
-| Priest, and Holy/Restoration/Balance/Elemental hybrids | Spell Power, Intellect/MP5, Spirit |
+| Priest, and Holy/Restoration/Balance/Elemental hybrids | Spell Power, Healing, Intellect/MP5, Spirit |
 
 Hybrids without a talent tree yet get a mixed list (druids lead with casting). Stamina, Health and Armor are always on the list as a last resort. Elixirs that only give stats your class gets nothing from (Strength or Agility on a mage, Intellect or Spirit on a rogue) are skipped instead of wasted, and show as "no use to your class". Add the stat to your priority if you want them used anyway. Battle and guardian elixirs are not told apart yet: the macro uses the single best match, so keep the other elixir type on a separate slot if you use both.
 

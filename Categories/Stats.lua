@@ -34,12 +34,14 @@ stats.STATS = {
     { key = "CRIT",      label = "Crit",      phrases = { "critical strike rating", "critical strike", "crit" }, aliases = { "crit", "critical", "criticalstrike" } },
     { key = "MASTERY",   label = "Mastery",   phrases = { "mastery rating", "mastery" },               aliases = { "mastery", "mast" } },
     { key = "VERS",      label = "Versatility", phrases = { "versatility" },                           aliases = { "versatility", "vers", "versa" } },
-    { key = "HIT",       label = "Hit",       phrases = { "hit rating" },                              aliases = { "hit" } },
+    { key = "HIT",       label = "Hit",       phrases = { "hit rating", "hit chance" },                aliases = { "hit" } },
     { key = "EXPERTISE", label = "Expertise", phrases = { "expertise rating", "expertise" },           aliases = { "expertise", "exp" } },
     { key = "AP",        label = "Attack Power", phrases = { "attack power" },                         aliases = { "ap", "attackpower", "attack" } },
-    { key = "SP",        label = "Spell Power", phrases = { "spell power" },                           aliases = { "sp", "spellpower", "spell" } },
+    { key = "SP",        label = "Spell Power", phrases = { "spell power", "spell damage" },           aliases = { "sp", "spellpower", "spell" } },
+    { key = "HEALING",   label = "Healing",   phrases = { "healing power", "spell healing", "healing" }, aliases = { "healing", "heal", "healingpower" } },
     { key = "ARMOR",     label = "Armor",     phrases = { "armor" },                                   aliases = { "armor", "armour" } },
     { key = "MP5",       label = "Mana/5",    phrases = { "mana per 5 sec", "mana every 5 sec" },      aliases = { "mp5", "manaregen" } },
+    { key = "HP5",       label = "Health/5",  phrases = { "health per 5 sec", "health every 5 sec" },  aliases = { "hp5", "healthregen" } },
     { key = "HEALTH",    label = "Health",    phrases = { "maximum health", "max health", "health" },   aliases = { "health", "hp" } },
     { key = "MANA",      label = "Mana",      phrases = { "maximum mana", "max mana", "mana" },         aliases = { "mana", "mp" } },
 }
@@ -101,22 +103,63 @@ function stats.Normalise(text)
     return result
 end
 
+-- Finds the stat a "... by N" phrase ends in, looking at its last few words
+-- ("increases your mastery" -> MASTERY).
+local function MatchStatTail(phrase)
+    local words = {}
+    for word in phrase:gmatch("%a+") do
+        words[#words + 1] = word
+    end
+    for start = math.max(1, #words - 3), #words do
+        local key = MatchStat(table.concat(words, " ", start))
+        if key then
+            return key
+        end
+    end
+    return nil
+end
+
+-- Spell damage of a single school is not general spell power.
+local SCHOOLS = { arcane = true, fire = true, frost = true, nature = true, shadow = true, holy = true }
+
+-- Long-hand tooltip wording, rewritten to the short stat names.
+local REWRITES = {
+    { "damage and healing done by magical spells and effects", "spell damage" },
+    { "damage done by magical spells and effects", "spell damage" },
+    { "healing done by magical spells and effects", "healing" },
+    { "healing done by spells and effects", "healing" },
+}
+
 -- Reads "gain 20 Haste", "8 Stamina and Spirit", "increases your Mastery by
--- 15" and "8 of all stats" out of a normalised tooltip line into result.
--- MatchStat only checks the start of a phrase, so trailing words
--- ("haste for 1 hour") are harmless. Amounts restored by "restores N health"
--- are skipped so a potion's heal is not read as a Health stat. Mana over
--- time ("regenerate 3 mana every 5 seconds", "3 mana per 5 sec") is Mana/5,
--- not maximum Mana.
+-- 15", "1% Critical Strike chance" and "8 of all stats" out of a normalised
+-- tooltip line into result. MatchStat only checks the start of a phrase, so
+-- trailing words ("haste for 1 hour") are harmless. Amounts restored by
+-- "restores N health" are skipped so a potion's heal is not read as a Health
+-- stat. Regeneration ("regenerate 3 mana every 5 seconds", "20 health per 5
+-- sec") is Mana/5 or Health/5, not a maximum. Bonuses that only apply
+-- "against demons" and single-school spell damage are left out.
 function stats.ParseStats(line, result)
     result = result or {}
-    local function AddMP5(amount)
-        AddStat(result, "MP5", tonumber(amount))
-        return " "
+    local function Regen(key)
+        return function(amount)
+            AddStat(result, key, tonumber(amount))
+            return " "
+        end
     end
-    line = line:gsub("(%d+)%s+mana%s+every%s+5%s+sec%a*", AddMP5):gsub("(%d+)%s+mana%s+per%s+5%s+sec%a*", AddMP5)
+    line = line:gsub("(%d+)%s+mana%s+every%s+5%s+sec%a*", Regen("MP5")):gsub("(%d+)%s+mana%s+per%s+5%s+sec%a*", Regen("MP5"))
+    line = line:gsub("(%d+)%s+health%s+every%s+5%s+sec%a*", Regen("HP5")):gsub("(%d+)%s+health%s+per%s+5%s+sec%a*", Regen("HP5"))
     line = line:gsub("restores?%s+%d+%s+to%s+%d+", " "):gsub("restores?%s+%d+", " "):gsub("heals?%s+%d+", " ")
-    for amount, phrase in line:gmatch("(%d+)%s+([%a%s]+)") do
+    for _, rewrite in ipairs(REWRITES) do
+        line = line:gsub(rewrite[1], rewrite[2])
+    end
+    line = line:gsub("by%s+up%s+to%s+(%d)", "by %1")
+    line = line:gsub("by%s+%d+%s+against", "against"):gsub("%d+%%?(%s+[%a ]-%s+against%s)", "%1")
+    line = line:gsub("(%a+)%s+spell%s+damage", function(word)
+        if SCHOOLS[word] then
+            return word .. " school damage"
+        end
+    end)
+    for amount, phrase in line:gmatch("(%d+)%%?%s+([%a%s]+)") do
         amount = tonumber(amount)
         if phrase:match("^of all stats") then
             AddStat(result, "ALLSTATS", amount)
@@ -129,16 +172,12 @@ function stats.ParseStats(line, result)
             end
         end
     end
+    -- "increases strength and stamina by 18" names two stats.
     for phrase, amount in line:gmatch("([%a%s]+)%s+by%s+(%d+)") do
-        local words = {}
-        for word in phrase:gmatch("%a+") do
-            words[#words + 1] = word
-        end
-        for start = math.max(1, #words - 3), #words do
-            local key = MatchStat(table.concat(words, " ", start))
+        for part in (phrase .. " and "):gmatch("(.-)%s+and%s+") do
+            local key = not part:find("decrease", 1, true) and MatchStatTail(part)
             if key then
                 AddStat(result, key, tonumber(amount))
-                break
             end
         end
     end
@@ -146,8 +185,9 @@ function stats.ParseStats(line, result)
 end
 
 -- "Restores 1050 to 1750 health" -> 1750; "Restores 20% of your maximum
--- health" -> that share of the player's max; "Heals 2000 damage over 8 sec"
--- -> 2000. Returns nil when the text does not restore that resource.
+-- health" -> that share of the player's max, times the duration for "2% of
+-- your health per second for 25 sec"; "Heals 2000 damage over 8 sec" ->
+-- 2000. Returns nil when the text does not restore that resource.
 function stats.ParseRestore(text, resource, maxValue)
     local low, high = text:match("(%d+)%s+to%s+(%d+)%s+" .. resource)
     if high then
@@ -155,7 +195,8 @@ function stats.ParseRestore(text, resource, maxValue)
     end
     local percent = text:match("(%d+)%%%s+of%s+[%a%s]-" .. resource)
     if percent and maxValue then
-        return math.floor(maxValue * tonumber(percent) / 100)
+        local seconds = text:match(resource .. "[%a%s]-per%s+second%s+for%s+(%d+)%s+sec")
+        return math.floor(maxValue * tonumber(percent) / 100 * (tonumber(seconds) or 1))
     end
     local flat = text:match("restores?%s+(%d+)%s+" .. resource)
         or text:match("heals?%s+(%d+)%s+" .. resource)

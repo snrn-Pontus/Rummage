@@ -6,6 +6,15 @@
 - **SmartScroll** (#1): stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) by your stat priority, with the same class and talent defaults as flasks. The highest rank wins, scrolls your class gets nothing from are skipped, and the macro always uses the scroll on yourself.
 - "Any (strongest)" now really means any: scrolls and elixirs your class gets nothing from are no longer skipped when that is your first choice.
 - **Rummage bar:** an AutoBar-style bar with one button per category you carry something for, each using the same best item as its Smart macro. It grows and shrinks with your bags, shows counts and cooldowns, and can be moved, locked, turned vertical or scaled. Toggle it in the `/rum` window, on the settings page, or with `/rum bar`.
+- **Tooltip wording from WoW Forever is read correctly.** These used to count as having no stats, or the wrong ones:
+  - "Spell Damage" food (Spotted Yellowtail, Nightfin Soup) and "spell damage by up to 35" elixirs and flasks now count as Spell Power.
+  - "Healing Power" teas and "healing done by spells and effects" elixirs count as the new **Healing** stat, which casters and healers rank right after Spell Power.
+  - Percent stats ("1% Critical Strike chance", "5% Hit Chance") and two stats sharing one amount ("Strength and Stamina by 18") are read.
+  - "Regenerate 20 health every 5 sec" is the new **Health/5** stat instead of maximum health.
+  - Elixirs that only work against one creature type (Demonslaying) or for one spell school (Shadow Power) are no longer ranked as general Attack Power or Spell Power.
+- Food that restores "2% of your health per second for 25 sec" (Harvest food, Refreshing Red Apple) is ranked by its whole heal instead of a single tick.
+- Blessed Sunfruit and similar food ("Also increases your Strength") count as buff food, so `SmartPlainFood` no longer eats them.
+- `SmartDrink` uses buff drinks (teas, smoothies) only after every plain drink is gone.
 
 ## 0.4.0 — Plain food
 
