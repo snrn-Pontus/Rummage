@@ -54,7 +54,7 @@ end
 -- Load the addon files the way the client does: (addonName, ns).
 local categories = {}
 local ns = { core = { RegisterCategory = function(c) categories[c.key] = c end } }
-for _, path in ipairs({ "Categories/Stats.lua", "Categories/Flask.lua", "Categories/Scroll.lua" }) do
+for _, path in ipairs({ "Locale.lua", "Categories/Stats.lua", "Categories/Flask.lua", "Categories/Scroll.lua" }) do
     assert(loadfile(path))("Rummage", ns)
 end
 local category = assert(categories.scroll, "Scroll.lua did not register")

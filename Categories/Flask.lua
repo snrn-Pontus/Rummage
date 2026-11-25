@@ -110,8 +110,7 @@ local function IsFlaskLike(subclassID, lines)
     if subclassID == stats.SUBCLASS.FLASK or subclassID == stats.SUBCLASS.ELIXIR then
         return true
     end
-    local name = lines and lines[1] and lines[1]:lower() or ""
-    return name:find("flask", 1, true) ~= nil or name:find("elixir", 1, true) ~= nil or name:find("phial", 1, true) ~= nil
+    return ns.locale.NameHas("flask", lines and lines[1])
 end
 
 local function Classify(itemID, lines)
@@ -142,7 +141,9 @@ local function Classify(itemID, lines)
     return {
         name = lines[1],
         stats = found,
-        isFlask = subclassID == stats.SUBCLASS.FLASK or (lines[1] or ""):lower():find("flask", 1, true) ~= nil,
+        isFlask = subclassID == stats.SUBCLASS.FLASK
+            or ((lines[1] or ""):lower():find("flask", 1, true) ~= nil)
+            or ((lines[1] or ""):lower():find("frasco", 1, true) ~= nil),
     }
 end
 

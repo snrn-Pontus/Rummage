@@ -31,7 +31,7 @@ stats.STATS = {
     { key = "AGILITY",   label = "Agility",   phrases = { "agility" },                                 aliases = { "agility", "agi" } },
     { key = "INTELLECT", label = "Intellect", phrases = { "intellect" },                               aliases = { "intellect", "int" } },
     { key = "HASTE",     label = "Haste",     phrases = { "haste rating", "haste" },                   aliases = { "haste" } },
-    { key = "CRIT",      label = "Crit",      phrases = { "critical strike rating", "critical strike", "crit" }, aliases = { "crit", "critical", "criticalstrike" } },
+    { key = "CRIT",      label = "Crit",      phrases = { "critical strike rating", "critical strike", "critical hit", "crit" }, aliases = { "crit", "critical", "criticalstrike" } },
     { key = "MASTERY",   label = "Mastery",   phrases = { "mastery rating", "mastery" },               aliases = { "mastery", "mast" } },
     { key = "VERS",      label = "Versatility", phrases = { "versatility" },                           aliases = { "versatility", "vers", "versa" } },
     { key = "HIT",       label = "Hit",       phrases = { "hit rating", "hit chance" },                aliases = { "hit" } },
@@ -97,9 +97,19 @@ local function AddStat(result, key, amount)
     end
 end
 
--- Lower-cases a tooltip and drops thousands separators ("2,000 health").
+-- Lower-cases a tooltip, drops thousands separators ("2,000" and pt-BR
+-- "2.000") and decimals ("874.8 health" -> "874 health"), then rewrites
+-- non-English text into the English wording the parsers expect.
 function stats.Normalise(text)
-    local result = text:lower():gsub(",", "")
+    local result = text:lower()
+    local previous
+    repeat
+        previous = result
+        result = result:gsub("(%d)[.,](%d%d%d)%f[^%d]", "%1%2")
+    until result == previous
+    result = result:gsub("(%d)[.,]%d+", "%1"):gsub(",", "")
+    result = ns.locale.Translate(result)
+    result = result:gsub("by up to (%d+)", "by %1")
     return result
 end
 
@@ -189,7 +199,13 @@ end
 -- your health per second for 25 sec"; "Heals 2000 damage over 8 sec" ->
 -- 2000. Returns nil when the text does not restore that resource.
 function stats.ParseRestore(text, resource, maxValue)
+    -- Regeneration ("8 mana every 5 sec") is a buff, not an amount restored.
+    text = text:gsub("%d+%s+%a+%s+every%s+5%s+sec%a*", " "):gsub("%d+%s+%a+%s+per%s+5%s+sec%a*", " ")
     local low, high = text:match("(%d+)%s+to%s+(%d+)%s+" .. resource)
+    if not high then
+        -- Rejuvenation: "restores 1440 to 1760 mana and health".
+        low, high = text:match("(%d+)%s+to%s+(%d+)%s+%a+%s+and%s+" .. resource)
+    end
     if high then
         return tonumber(high)
     end

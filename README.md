@@ -126,7 +126,7 @@ Everything in the window also has a command, mostly for macros and keybinds:
 ## How it works and its limits
 
 - Macros cannot be changed in combat, so a bag change during a fight is applied when the fight ends. Running out of one potion type mid-fight therefore leaves the macro on the empty item until combat ends; carry a stack.
-- Stats and amounts are parsed from tooltip text in English. Other locales fall back to "any item, most health first" until their patterns are added. Items whose tooltip cannot be parsed can be listed under `OVERRIDES` in `Categories/Food.lua` or `Categories/Flask.lua`.
+- Stats and amounts are parsed from tooltip text. English and Brazilian Portuguese (ptBR) are supported; `Locale.lua` rewrites a non-English tooltip into the English wording the parsers read, so another language only needs its own rule table there. Items whose tooltip cannot be parsed can be listed under `OVERRIDES` in `Categories/Food.lua` or `Categories/Flask.lua`.
 - The macro uses `#showtooltip`, so the slot shows the chosen item's icon and count.
 - The macro is created per character when possible, and account-wide if the per-character slots are full.
 

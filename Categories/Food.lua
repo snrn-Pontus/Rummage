@@ -26,22 +26,48 @@ local function IsWellFed(text)
     return text:find("well fed", 1, true) ~= nil or text:find("also increases your", 1, true) ~= nil
 end
 
--- Buff food: anything that gives a buff (or is listed in OVERRIDES).
+-- Stats a seated food gives besides health and mana, read from every line
+-- but the name. Catches buff food whose tooltip never says "well fed"
+-- (pt-BR "Também aumenta em 10 o Vigor", "ganhará 10 de Agilidade").
+local function EatingBuffStats(lines)
+    local found = {}
+    for index, line in ipairs(lines) do
+        if index > 1 then
+            stats.ParseStats(stats.Normalise(line), found)
+        end
+    end
+    for key in pairs(IGNORE) do
+        found[key] = nil
+    end
+    return next(found) and found or nil
+end
+
+-- Food or drink you sit down for; a buff on a drink counts too (Peace Tea).
+local function IsSeated(text)
+    return text:find("must remain seated", 1, true) ~= nil
+end
+
+-- Buff food: anything that gives a buff, seated food that raises a stat,
+-- or an item listed in OVERRIDES.
 local function Classify(itemID, lines)
     local text = stats.Normalise(table.concat(lines, "\n"))
     local wellFed = IsWellFed(text)
     local health = stats.ParseRestore(text, "health")
 
-    if not OVERRIDES[itemID] and not wellFed then
-        return nil
+    local found = {}
+    if wellFed then
+        for _, line in ipairs(lines) do
+            local lower = stats.Normalise(line)
+            if IsWellFed(lower) then
+                stats.ParseStats(lower, found)
+            end
+        end
+    elseif IsSeated(text) then
+        found = EatingBuffStats(lines) or found
     end
 
-    local found = {}
-    for _, line in ipairs(lines) do
-        local lower = stats.Normalise(line)
-        if IsWellFed(lower) then
-            stats.ParseStats(lower, found)
-        end
+    if not OVERRIDES[itemID] and not wellFed and next(found) == nil then
+        return nil
     end
     if OVERRIDES[itemID] then
         for key, amount in pairs(OVERRIDES[itemID]) do
@@ -66,6 +92,9 @@ local function ClassifyPlain(itemID, lines)
     local text = stats.Normalise(table.concat(lines, "\n"))
     if IsWellFed(text) or not text:find("must remain seated", 1, true) then
         return nil
+    end
+    if EatingBuffStats(lines) then
+        return nil -- buff food, handled by SmartFood
     end
     local health = stats.ParseRestore(text, "health", UnitHealthMax("player"))
     if not health then

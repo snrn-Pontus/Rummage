@@ -1,5 +1,13 @@
 # Rummage changelog
 
+## Unreleased
+
+- **Brazilian Portuguese (ptBR) clients.** Every category now recognises items on a ptBR client; before, only quest items from the quest log were found. `Locale.lua` rewrites ptBR tooltips into the English wording the parsers use, and item names are matched in both languages.
+- Numbers with thousands separators or decimals are read correctly (`2.000`, `1,050`, `874.8 health`, which used to be read as 8).
+- Items that begin a quest are picked up again: they have no "Use:" line, which the check required.
+- Rejuvenation potions count as healing potions too (still ranked after pure ones), and mana regeneration ("8 mana every 5 sec") is no longer read as a drink or potion amount; "critical hit" counts as Crit.
+- Seated food and drinks with a buff whose ptBR tooltip never says "well fed" ("Também aumenta em 10 o Espírito") go to SmartFood, as their English versions do.
+
 ## 0.5.0 — Rummage bar
 
 - **SmartScroll** (#1): stat scrolls (Stamina, Intellect, Spirit, Strength, Agility, Protection) by your stat priority, with the same class and talent defaults as flasks. The highest rank wins, scrolls your class gets nothing from are skipped, and the macro always uses the scroll on yourself.

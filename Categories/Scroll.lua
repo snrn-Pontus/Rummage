@@ -13,8 +13,7 @@ local function IsScroll(subclassID, lines)
     if subclassID == stats.SUBCLASS.SCROLL then
         return true
     end
-    local name = lines and lines[1] and lines[1]:lower() or ""
-    return name:find("scroll", 1, true) ~= nil
+    return ns.locale.NameHas("scroll", lines and lines[1])
 end
 
 local function Classify(itemID, lines)

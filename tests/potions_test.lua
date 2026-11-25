@@ -20,7 +20,7 @@ C_Item = {
 
 local categories = {}
 local ns = { core = { RegisterCategory = function(c) categories[c.key] = c end } }
-for _, path in ipairs({ "Categories/Stats.lua", "Categories/Potions.lua" }) do
+for _, path in ipairs({ "Locale.lua", "Categories/Stats.lua", "Categories/Potions.lua" }) do
     assert(loadfile(path))("Rummage", ns)
 end
 
